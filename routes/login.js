@@ -33,10 +33,10 @@ router.post("/", async (req, res) => {
         if (login.password === password) {
             if (login.candidate) {
                 const token = generetaTokenJWT(login.id, login.candidate.id);
-                return res.json({token:token,role:"candidate"});
+                return res.json({ token: token, role: "candidate" });
             } else {
                 const token = generetaTokenJWT(login.id, login.employer.id);
-                return res.json({token:token,role:"employer"});
+                return res.json({ token: token, role: "employer" });
             }
         } else {
             return res
@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
                 .json({ err: "Le mot de passe est incorrect !" });
         }
     } catch (error) {
-       return  res.status(404).json(error.message);
+        return res.status(404).json(error.message);
     }
 });
 

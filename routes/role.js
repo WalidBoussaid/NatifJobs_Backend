@@ -1,5 +1,5 @@
 const express = require("express");
-const { Login, Candidate, Employer } = require("../model/schema");
+const { Candidate, Employer } = require("../model/schema");
 const router = express.Router();
 const passport = require("../auth/passport");
 
