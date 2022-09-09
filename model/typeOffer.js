@@ -4,9 +4,9 @@ const connection = require("./connection");
 //import methods to create model
 const { Model, DataTypes } = require("sequelize");
 
-class CategoryJob extends Model {}
+class TypeOffer extends Model {}
 
-CategoryJob.init(
+TypeOffer.init(
     {
         name: {
             type: DataTypes.STRING,
@@ -15,8 +15,8 @@ CategoryJob.init(
     },
     {
         sequelize: connection,
-        modelName: "categoryJob",
+        modelName: "typeOffer",
     }
 );
 
-module.exports = CategoryJob;
+module.exports = TypeOffer;

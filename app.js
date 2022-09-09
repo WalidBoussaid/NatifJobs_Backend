@@ -10,7 +10,7 @@ const createError = require("http-errors");
 //routes
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const offerRouter = require("./routes/offre");
+const offerRouter = require("./routes/offer");
 const loginRouter = require("./routes/login");
 const roleRouter = require("./routes/role");
 const registerLoginRouter = require("./routes/registerLogin");

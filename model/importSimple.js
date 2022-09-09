@@ -9,6 +9,7 @@ const {
     Offer,
     CategoryJob,
     Login,
+    TypeOffer,
 } = require("./schema");
 
 (async () => {
@@ -55,12 +56,22 @@ const {
         name: "Autre ..",
     });
 
+    //TypeOffer
+    const cdi = await TypeOffer.create({
+        name: "CDI",
+    });
+    const cdd = await TypeOffer.create({
+        name: "CDD",
+    });
+    const interim = await TypeOffer.create({
+        name: "Intérimaire",
+    });
+
     //Offer
     const offer1 = await Offer.create({
         title: "Junior devlopper java",
         description:
             "En tant que Junior Java Developer, vous rejoignez une équipe dynamique organisée de façon Agile / Scrum : gestion d'un backlog, séances de poker planning, stand-up meetings quotidiens, découpe du travail en sprints de 2 à 3 semaines, réunions rétrospectives, Cette organisation permet à chaque membre de l’équipe de s’impliquer fortement dans le projet et de participer aux prises de décisions. Vous prenez part au développement de nouvelles applications en vous basant sur les standards de développement et les frameworks existants. A partir des documents d’analyses fonctionnelles rédigés par les analystes et des consignes techniques transmises par les architectes, vous assurez le développement, le testing et la documentation des applications développées. Vous êtes également responsable de la résolution de bugs liés au code et du développement de nouvelles fonctionnalités...",
-        typeOffer: "CDI",
     });
 
     //Login
@@ -116,6 +127,9 @@ const {
 
     //add cetegory to offer
     await offer1.setCategoryJob(info);
+
+    //add typeOffer to offer
+    await offer1.setTypeOffer(cdi);
 
     //close the connection
     await sequelize.close();
