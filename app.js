@@ -14,6 +14,8 @@ const offerRouter = require("./routes/offer");
 const loginRouter = require("./routes/login");
 const roleRouter = require("./routes/role");
 const registerLoginRouter = require("./routes/registerLogin");
+const categoryRouter = require("./routes/cetegory");
+const typeOfferRouter = require("./routes/typeOffer");
 
 const app = express();
 
@@ -31,5 +33,7 @@ app.use("/offer", offerRouter);
 app.use("/login", loginRouter);
 app.use("/role", roleRouter);
 app.use("/registerLogin", registerLoginRouter);
+app.use("/category", categoryRouter);
+app.use("/typeOffer", typeOfferRouter);
 
 module.exports = app;

@@ -1,8 +1,7 @@
 const express = require("express");
-const { Offer, Employer, CategoryJob, TypeOffer } = require("../model/schema");
 const router = express.Router();
+const { Offer, Employer, CategoryJob, TypeOffer } = require("../model/schema");
 const passport = require("../auth/passport");
-const { findByPk, findOne } = require("../model/candidate");
 
 //route qui cree une offre
 router.post("/addOffer", passport, async (req, res) => {
@@ -69,7 +68,7 @@ router.post("/addOffer", passport, async (req, res) => {
 });
 
 //route qui retourne toutes les offres des employeurs
-router.get("/myAllOffer", passport, async (req, res) => {
+router.post("/myAllOffer", passport, async (req, res) => {
     try {
         const userId = req.user.userId;
 
