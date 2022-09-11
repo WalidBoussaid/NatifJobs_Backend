@@ -10,6 +10,7 @@ router.post("/employer", async (req, res) => {
         const password = req.body.password;
         const name = req.body.name;
         const email = req.body.mail;
+        const town = req.body.town;
         const adress = req.body.adress;
         const postalCode = req.body.postalCode;
         const phone = req.body.phone;
@@ -38,6 +39,11 @@ router.post("/employer", async (req, res) => {
         if (name.length < 2) {
             return res.status(404).json({
                 err: "Veuillez entrer un nom avec min 2 caractères",
+            });
+        }
+        if (town.length < 4) {
+            return res.status(404).json({
+                err: "Veuillez entrer une ville avec min 5 caractères",
             });
         }
         if (adress.length < 5) {
@@ -80,6 +86,7 @@ router.post("/employer", async (req, res) => {
             name: name,
             email: mail,
             adress: adress,
+            town: town,
             postalCode: postalCode,
             phone: phone,
             profilImg: profilImg,
