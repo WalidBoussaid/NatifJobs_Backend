@@ -10,7 +10,7 @@ router.post("/employer", async (req, res) => {
         const password = req.body.password;
         const name = req.body.name;
         const email = req.body.mail;
-        const town = req.body.town;
+        const city = req.body.city;
         const adress = req.body.adress;
         const postalCode = req.body.postalCode;
         const phone = req.body.phone;
@@ -86,7 +86,7 @@ router.post("/employer", async (req, res) => {
             name: name,
             email: mail,
             adress: adress,
-            town: town,
+            city: city,
             postalCode: postalCode,
             phone: phone,
             profilImg: profilImg,

@@ -69,7 +69,7 @@ const {
 
     //Offer
     const offer1 = await Offer.create({
-        title: "Junior devlopper java",
+        title: "Junior devloper java",
         description:
             "En tant que Junior Java Developer, vous rejoignez une équipe dynamique organisée de façon Agile / Scrum : gestion d'un backlog, séances de poker planning, stand-up meetings quotidiens, découpe du travail en sprints de 2 à 3 semaines, réunions rétrospectives, Cette organisation permet à chaque membre de l’équipe de s’impliquer fortement dans le projet et de participer aux prises de décisions. Vous prenez part au développement de nouvelles applications en vous basant sur les standards de développement et les frameworks existants. A partir des documents d’analyses fonctionnelles rédigés par les analystes et des consignes techniques transmises par les architectes, vous assurez le développement, le testing et la documentation des applications développées. Vous êtes également responsable de la résolution de bugs liés au code et du développement de nouvelles fonctionnalités...",
     });
@@ -105,7 +105,7 @@ const {
     const emp1 = await Employer.create({
         name: "Toto SPRL",
         email: "totosprl@gmail.com",
-        town: "Bruxelles",
+        city: "Bruxelles",
         adress: "Rue du tanneur, 17",
         postalCode: "1050",
         phone: "045236541",
