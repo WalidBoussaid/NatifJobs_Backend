@@ -352,4 +352,53 @@ router.get("/AllOffer", passport, async (req, res) => {
     }
 });
 
+//route qui recupere les donnees de l'offre coté candidat
+router.get("/OfferSelected/:id", passport, async (req, res) => {
+    try {
+        const offerId = req.params.id;
+
+        const offer = await Offer.findOne({
+            where: {
+                id: offerId,
+            },
+            include: [
+                {
+                    model: CategoryJob,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+                {
+                    model: TypeOffer,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+                {
+                    model: City,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+                {
+                    model: Employer,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+            ],
+        });
+
+        if (offer == null || offer == "") {
+            return res
+                .status(404)
+                .json({ err: "Il n'y a pas d'offre à afficher !" });
+        }
+
+        return res.json(offer);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
 module.exports = router;

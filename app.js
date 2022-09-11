@@ -17,6 +17,7 @@ const registerLoginRouter = require("./routes/registerLogin");
 const categoryRouter = require("./routes/cetegory");
 const typeOfferRouter = require("./routes/typeOffer");
 const cityRoutter = require("./routes/city");
+
 const app = express();
 
 app.use(cors());
