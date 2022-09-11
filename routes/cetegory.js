@@ -10,7 +10,7 @@ router.get("/allCategory", async (req, res) => {
         });
         return res.json(cat);
     } catch (error) {
-        res.status(404).json(error.message);
+        return res.status(404).json(error.message);
     }
 });
 
