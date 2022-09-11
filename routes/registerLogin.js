@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-const { Login, Employer, Role, Candidate } = require("../model/schema");
+const { Login, Employer, Role, Candidate, City } = require("../model/schema");
 const { generetaTokenJWT } = require("../auth/jwtAuth");
 
 router.post("/employer", async (req, res) => {
@@ -10,7 +10,7 @@ router.post("/employer", async (req, res) => {
         const password = req.body.password;
         const name = req.body.name;
         const email = req.body.mail;
-        const city = req.body.city;
+        const cityId = req.body.cityId;
         const adress = req.body.adress;
         const postalCode = req.body.postalCode;
         const phone = req.body.phone;
@@ -41,11 +41,7 @@ router.post("/employer", async (req, res) => {
                 err: "Veuillez entrer un nom avec min 2 caractères",
             });
         }
-        if (town.length < 4) {
-            return res.status(404).json({
-                err: "Veuillez entrer une ville avec min 5 caractères",
-            });
-        }
+
         if (adress.length < 5) {
             return res.status(404).json({
                 err: "Veuillez entrer une adresse avec min 5 caractères",
@@ -86,7 +82,6 @@ router.post("/employer", async (req, res) => {
             name: name,
             email: mail,
             adress: adress,
-            city: city,
             postalCode: postalCode,
             phone: phone,
             profilImg: profilImg,
@@ -98,6 +93,16 @@ router.post("/employer", async (req, res) => {
                 roleName: "employer",
             },
         });
+        const city = await City.findOne({
+            where: {
+                id: cityId,
+            },
+        });
+        if (city == null || city == "") {
+            return res.status(404).json({
+                err: "La ville n'existe pas !",
+            });
+        }
 
         if (role == null || role == "") {
             return res.status(404).json({
@@ -107,6 +112,7 @@ router.post("/employer", async (req, res) => {
 
         await emp.setLogin(createLogin);
         await emp.setRole(role);
+        await emp.setCity(city);
         res.json(emp);
     } catch (error) {
         return res.status(404).json(error.message);

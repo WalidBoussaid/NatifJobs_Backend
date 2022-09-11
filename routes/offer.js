@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { Offer, Employer, CategoryJob, TypeOffer } = require("../model/schema");
+const {
+    Offer,
+    Employer,
+    CategoryJob,
+    TypeOffer,
+    City,
+} = require("../model/schema");
 const passport = require("../auth/passport");
 
 //route qui cree une offre
@@ -11,6 +17,7 @@ router.post("/addOffer", passport, async (req, res) => {
         const description = req.body.description;
         const categoryOffer = req.body.categoryOffer;
         const typeOffer = req.body.typeOffer;
+        const cityId = req.body.cityId;
 
         const userId = req.user.userId; //recupère l'id de l'employeur connecté
 
@@ -32,6 +39,12 @@ router.post("/addOffer", passport, async (req, res) => {
             },
         });
 
+        const city = await City.findOne({
+            where: {
+                id: cityId,
+            },
+        });
+
         if (employer == null || employer == "") {
             return res.status(404).json({ err: "L'employeur n'esxiste pas !" });
         }
@@ -39,6 +52,9 @@ router.post("/addOffer", passport, async (req, res) => {
             return res
                 .status(404)
                 .json({ err: "La categorie n'esxiste pas !" });
+        }
+        if (city == null || city == "") {
+            return res.status(404).json({ err: "La ville n'esxiste pas !" });
         }
         if (type == null || type == "") {
             return res
@@ -64,6 +80,7 @@ router.post("/addOffer", passport, async (req, res) => {
         await offer.setEmployer(employer);
         await offer.setCategoryJob(category);
         await offer.setTypeOffer(type);
+        await offer.setCity(city);
 
         return res.json(offer);
     } catch (error) {
@@ -89,6 +106,12 @@ router.post("/myAllOffer", passport, async (req, res) => {
                 },
                 {
                     model: TypeOffer,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+                {
+                    model: City,
                     attributes: {
                         exclude: ["updatedAt", "createdAt"],
                     },
@@ -126,6 +149,9 @@ router.get("/myOffer/:id", passport, async (req, res) => {
                 {
                     model: TypeOffer,
                 },
+                {
+                    model: City,
+                },
             ],
         });
 
@@ -148,6 +174,7 @@ router.post("/updateMyOffer/:id", passport, async (req, res) => {
         const description = req.body.description;
         const categoryId = req.body.categoryId;
         const typeOfferId = req.body.typeOfferId;
+        const cityId = req.body.cityId;
 
         const offerId = req.params.id;
         const userId = req.user.userId;
@@ -164,6 +191,9 @@ router.post("/updateMyOffer/:id", passport, async (req, res) => {
                 {
                     model: TypeOffer,
                 },
+                {
+                    model: City,
+                },
             ],
         });
 
@@ -179,6 +209,14 @@ router.post("/updateMyOffer/:id", passport, async (req, res) => {
             },
         });
 
+        const cityObj = await City.findOne({
+            where: {
+                id: cityId,
+            },
+        });
+
+        console.log("cityObj", cityObj);
+
         if (offer == null || offer == "") {
             return res
                 .status(404)
@@ -187,6 +225,11 @@ router.post("/updateMyOffer/:id", passport, async (req, res) => {
         if (category == null || category == "") {
             return res.status(404).json({
                 err: "Il n'y a pas de categorie trouver !",
+            });
+        }
+        if (cityObj == null || cityObj == "") {
+            return res.status(404).json({
+                err: "Il n'y a pas de ville trouver !",
             });
         }
         if (type == null || type == "") {
@@ -223,8 +266,9 @@ router.post("/updateMyOffer/:id", passport, async (req, res) => {
 
         await offer.save(); //save l'objet offer avec les nouvelles valeurs des colonnes title et description
 
-        offer.setCategoryJob(category);
-        offer.setTypeOffer(type);
+        await offer.setCategoryJob(category);
+        await offer.setTypeOffer(type);
+        await offer.setCity(cityObj);
 
         return res.json(true);
     } catch (error) {
@@ -283,6 +327,12 @@ router.get("/AllOffer", passport, async (req, res) => {
                 },
                 {
                     model: TypeOffer,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+                {
+                    model: City,
                     attributes: {
                         exclude: ["updatedAt", "createdAt"],
                     },

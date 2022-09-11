@@ -10,6 +10,7 @@ const {
     CategoryJob,
     Login,
     TypeOffer,
+    City,
 } = require("./schema");
 
 (async () => {
@@ -22,6 +23,35 @@ const {
     });
     const candidate = await Role.create({
         roleName: "candidate",
+    });
+
+    //city
+    const bruxelles = await City.create({
+        name: "Bruxelles",
+    });
+    const liege = await City.create({
+        name: "Liège",
+    });
+    const namur = await City.create({
+        name: "Namur",
+    });
+    const bruges = await City.create({
+        name: "Bruges",
+    });
+    const mons = await City.create({
+        name: "Mons",
+    });
+    const gand = await City.create({
+        name: "Gand",
+    });
+    const charleroi = await City.create({
+        name: "Charleroi",
+    });
+    const anvers = await City.create({
+        name: "Anvers",
+    });
+    const nivelles = await City.create({
+        name: "Nivelles",
     });
 
     //category Job
@@ -123,8 +153,14 @@ const {
     await yves.setLogin(log1);
     await emp1.setLogin(log2);
 
+    //add city to employer
+    await emp1.setCity(bruxelles);
+
     //add employer to offer
     await offer1.setEmployer(emp1);
+
+    //add city to offer
+    await offer1.setCity(bruxelles);
 
     //add cetegory to offer
     await offer1.setCategoryJob(info);

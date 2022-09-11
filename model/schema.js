@@ -5,6 +5,7 @@ const Offer = require("./offer");
 const CategoryJob = require("./categoryJob");
 const Login = require("./login");
 const TypeOffer = require("./typeOffer");
+const City = require("./city");
 
 //models associations
 Role.hasMany(Candidate);
@@ -18,6 +19,12 @@ Employer.hasMany(Offer);
 
 CategoryJob.hasMany(Offer);
 Offer.belongsTo(CategoryJob);
+
+City.hasMany(Offer);
+Offer.belongsTo(City);
+
+City.hasMany(Employer);
+Employer.belongsTo(City);
 
 TypeOffer.hasMany(Offer);
 Offer.belongsTo(TypeOffer);
@@ -35,4 +42,5 @@ module.exports = {
     CategoryJob,
     Login,
     TypeOffer,
+    City,
 };
