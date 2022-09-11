@@ -16,7 +16,7 @@ const roleRouter = require("./routes/role");
 const registerLoginRouter = require("./routes/registerLogin");
 const categoryRouter = require("./routes/cetegory");
 const typeOfferRouter = require("./routes/typeOffer");
-
+const cityRoutter = require("./routes/city");
 const app = express();
 
 app.use(cors());
@@ -35,5 +35,6 @@ app.use("/role", roleRouter);
 app.use("/registerLogin", registerLoginRouter);
 app.use("/category", categoryRouter);
 app.use("/typeOffer", typeOfferRouter);
+app.use("/city", cityRoutter);
 
 module.exports = app;
