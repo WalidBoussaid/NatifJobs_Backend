@@ -136,6 +136,7 @@ router.post("/candidate", async (req, res) => {
         const lastExperiencepro = req.body.lastExperiencepro;
         const hobbies = req.body.hobbies;
         const cv = req.body.cv;
+        const cityId = req.body.cityId;
 
         const login = await Login.findOne({
             where: {
@@ -248,8 +249,21 @@ router.post("/candidate", async (req, res) => {
             });
         }
 
+        const city = await City.findOne({
+            where: {
+                id: cityId,
+            },
+        });
+
+        if (city == null || city == "") {
+            return res.status(404).json({
+                err: "La ville n'existe pas !",
+            });
+        }
+
         await cand.setLogin(createLogin);
         await cand.setRole(role);
+        await cand.setCity(city);
         res.json(cand);
     } catch (error) {
         return res.status(404).json(error.message);

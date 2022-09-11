@@ -153,8 +153,9 @@ const {
     await yves.setLogin(log1);
     await emp1.setLogin(log2);
 
-    //add city to employer
+    //add city to employer/candidate
     await emp1.setCity(bruxelles);
+    await yves.setCity(mons);
 
     //add employer to offer
     await offer1.setEmployer(emp1);

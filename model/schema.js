@@ -24,7 +24,9 @@ City.hasMany(Offer);
 Offer.belongsTo(City);
 
 City.hasMany(Employer);
+City.hasMany(Candidate);
 Employer.belongsTo(City);
+Candidate.belongsTo(City);
 
 TypeOffer.hasMany(Offer);
 Offer.belongsTo(TypeOffer);
