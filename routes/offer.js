@@ -265,7 +265,7 @@ router.delete("/deleteOffer/:id", passport, async (req, res) => {
 });
 
 //route qui permet au candidat de de consulter toute les offres(hors filtre)
-router.get("/AllOffer", async (req, res) => {
+router.get("/AllOffer", passport, async (req, res) => {
     try {
         const offer = await Offer.findAll({
             include: [
