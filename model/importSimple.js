@@ -105,6 +105,7 @@ const {
     const emp1 = await Employer.create({
         name: "Toto SPRL",
         email: "totosprl@gmail.com",
+        town: "Bruxelles",
         adress: "Rue du tanneur, 17",
         postalCode: "1050",
         phone: "045236541",

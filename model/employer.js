@@ -21,6 +21,10 @@ Employer.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        town: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         postalCode: {
             type: DataTypes.STRING,
             allowNull: false,
