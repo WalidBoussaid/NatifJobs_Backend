@@ -15,8 +15,8 @@ City.init(
     },
     {
         sequelize: connection,
-        modelName: "role",
+        modelName: "city",
     }
 );
 
-module.exports = Role;
+module.exports = City;
