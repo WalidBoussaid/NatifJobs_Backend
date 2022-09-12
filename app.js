@@ -17,6 +17,7 @@ const registerLoginRouter = require("./routes/registerLogin");
 const categoryRouter = require("./routes/cetegory");
 const typeOfferRouter = require("./routes/typeOffer");
 const cityRoutter = require("./routes/city");
+const candidateRouter = require("./routes/candidate");
 
 const app = express();
 
@@ -37,5 +38,6 @@ app.use("/registerLogin", registerLoginRouter);
 app.use("/category", categoryRouter);
 app.use("/typeOffer", typeOfferRouter);
 app.use("/city", cityRoutter);
+app.use("/candidate", candidateRouter);
 
 module.exports = app;

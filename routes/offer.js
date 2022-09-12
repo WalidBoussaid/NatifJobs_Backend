@@ -215,8 +215,6 @@ router.post("/updateMyOffer/:id", passport, async (req, res) => {
             },
         });
 
-        console.log("cityObj", cityObj);
-
         if (offer == null || offer == "") {
             return res
                 .status(404)

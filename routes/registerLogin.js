@@ -123,7 +123,6 @@ router.post("/candidate", async (req, res) => {
     try {
         const mail = req.body.mail;
         const password = req.body.password;
-
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         const email = req.body.mail;
@@ -264,7 +263,8 @@ router.post("/candidate", async (req, res) => {
         await cand.setLogin(createLogin);
         await cand.setRole(role);
         await cand.setCity(city);
-        res.json(cand);
+
+        return res.json(cand);
     } catch (error) {
         return res.status(404).json(error.message);
     }
