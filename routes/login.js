@@ -3,6 +3,7 @@ const express = require("express");
 const { Login, Candidate, Employer } = require("../model/schema");
 const router = express.Router();
 const { generetaTokenJWT } = require("../auth/jwtAuth");
+const passport = require("../auth/passport");
 
 /* POST login listing. */
 router.post("/", async (req, res) => {
@@ -43,6 +44,22 @@ router.post("/", async (req, res) => {
                 .status(404)
                 .json({ err: "Le mot de passe est incorrect !" });
         }
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
+router.get("/findLogin/:id", passport, async (req, res) => {
+    const loginId = req.user.loginId;
+
+    try {
+        const login = await Login.findOne({
+            where: {
+                id: loginId,
+            },
+        });
+
+        return res.json(login);
     } catch (error) {
         return res.status(404).json(error.message);
     }
