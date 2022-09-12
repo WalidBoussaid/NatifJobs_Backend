@@ -18,6 +18,7 @@ const categoryRouter = require("./routes/cetegory");
 const typeOfferRouter = require("./routes/typeOffer");
 const cityRoutter = require("./routes/city");
 const candidateRouter = require("./routes/candidate");
+const employerRouter = require("./routes/employer");
 
 const app = express();
 
@@ -39,5 +40,6 @@ app.use("/category", categoryRouter);
 app.use("/typeOffer", typeOfferRouter);
 app.use("/city", cityRoutter);
 app.use("/candidate", candidateRouter);
+app.use("/employer", employerRouter);
 
 module.exports = app;

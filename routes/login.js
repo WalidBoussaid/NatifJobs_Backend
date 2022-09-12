@@ -49,6 +49,7 @@ router.post("/", async (req, res) => {
     }
 });
 
+//retourne le login de l'utilisateur
 router.get("/findLogin/:id", passport, async (req, res) => {
     const loginId = req.user.loginId;
 
