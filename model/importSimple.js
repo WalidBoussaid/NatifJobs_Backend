@@ -120,7 +120,7 @@ const {
         lastName: "Nduwayezv",
         email: " nduwayezv@cactustore.com",
         profilImg:
-            "Bhttps://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_6FS-PjJwSzN6nGbSJng09kxlB55K3-TGBQ&usqp=CAU",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_6FS-PjJwSzN6nGbSJng09kxlB55K3-TGBQ&usqp=CAU%22",
         nationality: "Belge",
         adress: "Rue de la ville, 15",
         postalCode: "1030",

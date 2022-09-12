@@ -108,7 +108,7 @@ router.post("/updateCandidate/:id", passport, async (req, res) => {
 
         if (profilImg.length < 5) {
             return res.status(404).json({
-                err: "Veuillez entrer une adresse avec min 5 caractères",
+                err: "Veuillez entrer une image avec min 5 caractères",
             });
         }
         if (nationality.length < 4 || !/^[aA-zZ]+$/.test(nationality)) {
