@@ -6,6 +6,10 @@ const CategoryJob = require("./categoryJob");
 const Login = require("./login");
 const TypeOffer = require("./typeOffer");
 const City = require("./city");
+const NotificationCandidate = require("./notificationCandidate");
+const NotificationEmployer = require("./notificationEmployer");
+const HistoryCandidate = require("./historyCandidate");
+const HistoryEmployer = require("./historyEmployer");
 
 //models associations
 Role.hasMany(Candidate);
@@ -19,6 +23,18 @@ Employer.hasMany(Offer);
 
 CategoryJob.hasMany(Offer);
 Offer.belongsTo(CategoryJob);
+
+Employer.hasMany(HistoryEmployer);
+HistoryEmployer.belongsTo(Employer);
+
+Candidate.hasMany(HistoryCandidate);
+HistoryCandidate.belongsTo(Candidate);
+
+Employer.hasMany(NotificationEmployer);
+NotificationEmployer.belongsTo(Employer);
+
+Candidate.hasMany(NotificationCandidate);
+NotificationCandidate.belongsTo(Candidate);
 
 City.hasMany(Offer);
 Offer.belongsTo(City);

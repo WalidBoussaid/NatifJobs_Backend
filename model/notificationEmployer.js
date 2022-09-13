@@ -6,7 +6,7 @@ const { Model, DataTypes } = require("sequelize");
 
 class NotifEmployer extends Model {}
 
-NotifCandidate.init(
+NotifEmployer.init(
     {
         msg: {
             type: DataTypes.STRING,
@@ -15,6 +15,7 @@ NotifCandidate.init(
         visited: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
+            defaultValue: false,
         },
     },
     {
