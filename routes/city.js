@@ -1,9 +1,10 @@
 const express = require("express");
+const passport = require("../auth/passport");
 const City = require("../model/city");
 const router = express.Router();
 
 //route qui recupere les villes
-router.get("/allCity", async (req, res) => {
+router.get("/allCity", passport, async (req, res) => {
     try {
         const city = await City.findAll({
             attributes: ["id", "name"],

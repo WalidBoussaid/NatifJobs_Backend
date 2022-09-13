@@ -399,4 +399,80 @@ router.get("/OfferSelected/:id", passport, async (req, res) => {
     }
 });
 
+//route qui renvoi la liste des offres les avoir filtrer
+router.post("/OfferFiltred", passport, async (req, res) => {
+    let categoryId = req.body.categoryId;
+    let typeOfferId = req.body.typeOfferId;
+    let cityId = req.body.cityId;
+    let cattemp = [];
+    let citytemp = [];
+    let typetemp = [];
+
+    try {
+        const cat = await CategoryJob.findAll({
+            attributes: ["id"],
+        });
+        const city = await City.findAll({
+            attributes: ["id"],
+        });
+        const type = await TypeOffer.findAll({
+            attributes: ["id"],
+        });
+        if (categoryId == null) {
+            cat.forEach((obj) => cattemp.push(obj.id));
+            categoryId = cattemp;
+        }
+        if (typeOfferId == null) {
+            type.forEach((obj) => typetemp.push(obj.id));
+            typeOfferId = typetemp;
+        }
+        if (cityId == null) {
+            city.forEach((obj) => citytemp.push(obj.id));
+            cityId = citytemp;
+        }
+        const offer = await Offer.findAll({
+            where: {
+                cityId: cityId,
+                typeOfferId: typeOfferId,
+                categoryJobId: categoryId,
+            },
+            include: [
+                {
+                    model: Employer,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"], //suprimer les atributs "updatedAt", "createdAt" du json
+                    },
+                },
+                {
+                    model: CategoryJob,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"], //suprimer les atributs "updatedAt", "createdAt" du json
+                    },
+                },
+                {
+                    model: TypeOffer,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+                {
+                    model: City,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+            ],
+        });
+
+        if (offer == null || offer == "") {
+            return res.status(404).json({
+                err: "Il n'y a pas d'offre à afficher !",
+            });
+        }
+        return res.json(offer);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
 module.exports = router;

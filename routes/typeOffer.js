@@ -1,9 +1,10 @@
 const express = require("express");
+const passport = require("../auth/passport");
 const TypeOffer = require("../model/typeOffer");
 const router = express.Router();
 
 //route qui recupere les categorie
-router.get("/allTypeOffer", async (req, res) => {
+router.get("/allTypeOffer", passport, async (req, res) => {
     try {
         const type = await TypeOffer.findAll({
             attributes: ["id", "name"],
