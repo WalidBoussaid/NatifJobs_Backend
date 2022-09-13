@@ -24,6 +24,12 @@ Employer.hasMany(Offer);
 CategoryJob.hasMany(Offer);
 Offer.belongsTo(CategoryJob);
 
+Offer.hasMany(HistoryEmployer);
+HistoryEmployer.belongsTo(Offer);
+
+Offer.hasMany(HistoryCandidate);
+HistoryCandidate.belongsTo(Offer);
+
 Employer.hasMany(HistoryEmployer);
 HistoryEmployer.belongsTo(Employer);
 
