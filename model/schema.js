@@ -67,4 +67,8 @@ module.exports = {
     Login,
     TypeOffer,
     City,
+    HistoryCandidate,
+    HistoryEmployer,
+    NotificationCandidate,
+    NotificationEmployer,
 };

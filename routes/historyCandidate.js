@@ -1,15 +1,15 @@
+require("dotenv").config();
 const express = require("express");
-const { HistoryCandidate, Candidate, Offer } = require("../model/schema");
 const router = express.Router();
+const { HistoryCandidate, Candidate, Offer } = require("../model/schema");
 const passport = require("../auth/passport");
 
 router.post("/", passport, async (req, res) => {
-    const userId = req.user.userId;
-    const offerId = req.body.offerId;
-    const like = req.body.like;
-    const dislike = req.body.dislike;
-
     try {
+        const userId = req.user.userId;
+        const offerId = req.body.offerId;
+        const like = req.body.like;
+        const dislike = req.body.dislike;
         const historyCand = await HistoryCandidate.create({
             like: like,
             dislike: dislike,
@@ -47,3 +47,5 @@ router.post("/", passport, async (req, res) => {
         return res.status(404).json(error.message);
     }
 });
+
+module.exports = router;
