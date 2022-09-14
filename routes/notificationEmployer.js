@@ -11,6 +11,7 @@ router.get("/allNotif", passport, async (req, res) => {
             where: {
                 employerId: userId,
             },
+            order: [["createdAt", "DESC"]],
         });
         return res.json(notif);
     } catch (error) {
