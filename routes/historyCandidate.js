@@ -1,7 +1,16 @@
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-const { HistoryCandidate, Candidate, Offer } = require("../model/schema");
+const {
+    HistoryCandidate,
+    Candidate,
+    Offer,
+    Employer,
+    CategoryJob,
+    TypeOffer,
+    City,
+    NotificationEmployer,
+} = require("../model/schema");
 const passport = require("../auth/passport");
 
 //route qui post dans la DB l'historique des like et dislike d'offre
@@ -11,6 +20,7 @@ router.post("/", passport, async (req, res) => {
         const offerId = req.body.offerId;
         const like = req.body.like;
         const dislike = req.body.dislike;
+        let employerId = "";
 
         const historyCand = await HistoryCandidate.create({
             like: like,
@@ -39,12 +49,31 @@ router.post("/", passport, async (req, res) => {
             return res.status(404).json({
                 err: "Offre introuvable !",
             });
+        } else {
+            employerId = offer.employerId;
+        }
+
+        const emp = await Employer.findOne({
+            where: {
+                id: employerId,
+            },
+        });
+
+        if (like == true) {
+            const notifEmployer = await NotificationEmployer.create({
+                msg: cand.firstName + " a liké votre offre : " + offer.title,
+                visited: false,
+            });
+
+            await notifEmployer.setEmployer(emp);
+            await notifEmployer.setOffer(offer);
+            await notifEmployer.setCandidate(cand);
         }
 
         await historyCand.setCandidate(cand);
         await historyCand.setOffer(offer);
 
-        return res.json(historyCand);
+        return res.json(true);
     } catch (error) {
         return res.status(404).json(error.message);
     }
@@ -64,6 +93,32 @@ router.get("/allMyHistoryCandidate", passport, async (req, res) => {
                     attributes: {
                         exclude: ["updatedAt", "createdAt"], //suprimer les atributs "updatedAt", "createdAt" du json
                     },
+                    include: [
+                        {
+                            model: Employer,
+                            attributes: {
+                                exclude: ["updatedAt", "createdAt"], //suprimer les atributs "updatedAt", "createdAt" du json
+                            },
+                        },
+                        {
+                            model: CategoryJob,
+                            attributes: {
+                                exclude: ["updatedAt", "createdAt"], //suprimer les atributs "updatedAt", "createdAt" du json
+                            },
+                        },
+                        {
+                            model: TypeOffer,
+                            attributes: {
+                                exclude: ["updatedAt", "createdAt"], //suprimer les atributs "updatedAt", "createdAt" du json
+                            },
+                        },
+                        {
+                            model: City,
+                            attributes: {
+                                exclude: ["updatedAt", "createdAt"], //suprimer les atributs "updatedAt", "createdAt" du json
+                            },
+                        },
+                    ],
                 },
                 {
                     model: Candidate,

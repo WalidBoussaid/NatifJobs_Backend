@@ -39,8 +39,20 @@ HistoryCandidate.belongsTo(Candidate);
 Employer.hasMany(NotificationEmployer);
 NotificationEmployer.belongsTo(Employer);
 
+Offer.hasMany(NotificationEmployer);
+NotificationEmployer.belongsTo(Offer);
+
+Candidate.hasMany(NotificationEmployer);
+NotificationEmployer.belongsTo(Candidate);
+
 Candidate.hasMany(NotificationCandidate);
 NotificationCandidate.belongsTo(Candidate);
+
+Offer.hasMany(NotificationCandidate);
+NotificationCandidate.belongsTo(Offer);
+
+Employer.hasMany(NotificationCandidate);
+NotificationCandidate.belongsTo(Employer);
 
 City.hasMany(Offer);
 Offer.belongsTo(City);
