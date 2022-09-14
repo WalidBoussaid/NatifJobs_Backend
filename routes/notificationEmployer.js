@@ -19,4 +19,31 @@ router.get("/allNotif", passport, async (req, res) => {
     }
 });
 
+//route qui update les notif employer
+router.post("/updateNotif", passport, async (req, res) => {
+    const userId = req.user.userId;
+    const notifVisitedId = req.body.notifVisitedId;
+    try {
+        const notif = await NotificationEmployer.findOne({
+            where: {
+                id: notifVisitedId,
+            },
+        });
+
+        notif.set({ visited: true });
+        notif.save();
+
+        const notifAll = await NotificationEmployer.findAll({
+            where: {
+                employerId: userId,
+            },
+            order: [["createdAt", "DESC"]],
+        });
+
+        return res.json(notifAll);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
 module.exports = router;
