@@ -6,8 +6,10 @@ const {
     CategoryJob,
     TypeOffer,
     City,
+    HistoryCandidate,
 } = require("../model/schema");
 const passport = require("../auth/passport");
+const { Op } = require("sequelize");
 
 //route qui cree une offre
 router.post("/addOffer", passport, async (req, res) => {
@@ -309,7 +311,25 @@ router.delete("/deleteOffer/:id", passport, async (req, res) => {
 //route qui permet au candidat de de consulter toute les offres(hors filtre)
 router.get("/AllOffer", passport, async (req, res) => {
     try {
+        const userId = req.user.userId;
+        const offerInHistory = [];
+
+        const history = await HistoryCandidate.findAll({
+            where: {
+                candidateId: userId,
+            },
+        });
+
+        if (history !== null) {
+            history.forEach((obj) => offerInHistory.push(obj.offerId));
+        }
+
         const offer = await Offer.findAll({
+            where: {
+                id: {
+                    [Op.notIn]: offerInHistory,
+                },
+            },
             include: [
                 {
                     model: Employer,
