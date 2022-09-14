@@ -61,7 +61,11 @@ router.post("/", passport, async (req, res) => {
 
         if (like == true) {
             const notifEmployer = await NotificationEmployer.create({
-                msg: cand.firstName + " a liké votre offre : " + offer.title,
+                msg:
+                    cand.firstName +
+                    " a liké votre offre : " +
+                    offer.title +
+                    " \n Cliquez sur la notification pour consulter le profil",
                 visited: false,
             });
 

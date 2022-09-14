@@ -5,8 +5,13 @@ const router = express.Router();
 
 //route qui recupere les notif employer
 router.get("/allNotif", passport, async (req, res) => {
+    const userId = req.user.userId;
     try {
-        const notif = await NotificationEmployer.findAll();
+        const notif = await NotificationEmployer.findAll({
+            where: {
+                employerId: userId,
+            },
+        });
         return res.json(notif);
     } catch (error) {
         return res.status(404).json(error.message);
