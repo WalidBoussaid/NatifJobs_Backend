@@ -102,4 +102,6 @@ module.exports = {
     HistoryEmployer,
     NotificationCandidate,
     NotificationEmployer,
+    Match,
+    Message,
 };
