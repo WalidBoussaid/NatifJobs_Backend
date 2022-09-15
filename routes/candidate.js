@@ -28,6 +28,29 @@ router.get("/oneCandidate/:id", passport, async (req, res) => {
     }
 });
 
+//route qui retourne un candidat coté employer
+router.post("/findCandidate/:id", passport, async (req, res) => {
+    const candId = req.body.candId;
+    try {
+        const cand = await Candidate.findOne({
+            where: {
+                id: candId,
+            },
+            include: [
+                {
+                    model: City,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+            ],
+        });
+        return res.json(cand);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
 //route qui met à jour les info du candidat
 router.post("/updateCandidate/:id", passport, async (req, res) => {
     const loginId = req.user.loginId; //recupère l'idLogin du candidat connecté
