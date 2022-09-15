@@ -92,4 +92,25 @@ router.post("/createHistoryEmployer", passport, async (req, res) => {
     }
 });
 
+//route qui retourne un historique de l'employeur
+router.post("/findOneHistoryEmployer", passport, async (req, res) => {
+    const userId = req.user.userId;
+    const offerId = req.body.offerId;
+    const candId = req.body.candidatId;
+
+    try {
+        const historyEmp = await HistoryEmployer.findOne({
+            where: {
+                employerId: userId,
+                offerId: offerId,
+                candidateId: candId,
+            },
+        });
+
+        return res.json(historyEmp);
+    } catch (error) {
+        res.status(404).json(error.message);
+    }
+});
+
 module.exports = router;
