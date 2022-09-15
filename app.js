@@ -23,6 +23,7 @@ const historyCandidateRouter = require("./routes/historyCandidate");
 const notifEmployerRouter = require("./routes/notificationEmployer");
 const notifCandidateRouter = require("./routes/notificationCandidate");
 const historyEmployerRouter = require("./routes/historyEmployer");
+const matchRouter = require("./routes/match");
 
 const app = express();
 
@@ -49,5 +50,6 @@ app.use("/historyCandidate", historyCandidateRouter);
 app.use("/notifEmployer", notifEmployerRouter);
 app.use("/notifCandidate", notifCandidateRouter);
 app.use("/historyEmployer", historyEmployerRouter);
+app.use("/match", matchRouter);
 
 module.exports = app;
