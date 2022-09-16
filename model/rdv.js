@@ -9,7 +9,7 @@ class Rdv extends Model {}
 Rdv.init(
     {
         date: {
-            type: DataTypes.DATE,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         place: {
