@@ -89,7 +89,7 @@ router.post("/createMessageCand", passport, async (req, res) => {
             },
         });
 
-        await message.setEmployer(cand);
+        await message.setCandidate(cand);
         await message.setMatch(match);
 
         match.set({
