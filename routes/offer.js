@@ -7,6 +7,11 @@ const {
     TypeOffer,
     City,
     HistoryCandidate,
+    HistoryEmployer,
+    NotificationCandidate,
+    NotificationEmployer,
+    Match,
+    Message,
 } = require("../model/schema");
 const passport = require("../auth/passport");
 const { Op } = require("sequelize");
@@ -296,8 +301,47 @@ router.delete("/deleteOffer/:id", passport, async (req, res) => {
                 },
             ],
         });
+        const histCand = await HistoryCandidate.findAll({
+            where: { offerId: offerId },
+        });
+        const histEmp = await HistoryEmployer.findAll({
+            where: { offerId: offerId },
+        });
+        const notifCand = await NotificationCandidate.findAll({
+            where: { offerId: offerId },
+        });
+        const notifEmp = await NotificationEmployer.findAll({
+            where: { offerId: offerId },
+        });
+        const match = await Match.findAll({
+            where: { offerId: offerId },
+        });
+        let id = [];
+        match.forEach((obj) => id.push(obj.id));
+        const msg = await Message.findAll({
+            where: { matchId: id },
+        });
+
         if (offer) {
-            await offer.destroy(); //fonction qui suprime une offre
+            for (let i = 0; i < histCand.length; i++) {
+                await histCand[i].destroy();
+            }
+            for (let i = 0; i < histEmp.length; i++) {
+                await histEmp[i].destroy();
+            }
+            for (let i = 0; i < notifCand.length; i++) {
+                await notifCand[i].destroy();
+            }
+            for (let i = 0; i < notifEmp.length; i++) {
+                await notifEmp[i].destroy();
+            }
+            for (let i = 0; i < match.length; i++) {
+                await match[i].destroy();
+            }
+            for (let i = 0; i < msg.length; i++) {
+                await msg[i].destroy();
+            }
+            await offer.destroy();
         } else {
             return res.status(404).json({ err: "L'offre n'existe pas !" });
         }
