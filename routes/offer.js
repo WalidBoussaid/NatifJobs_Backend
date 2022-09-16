@@ -427,8 +427,18 @@ router.post("/OfferFiltred", passport, async (req, res) => {
     let cattemp = [];
     let citytemp = [];
     let typetemp = [];
+    const offerInHistory = [];
 
     try {
+        const history = await HistoryCandidate.findAll({
+            where: {
+                candidateId: userId,
+            },
+        });
+
+        if (history !== null) {
+            history.forEach((obj) => offerInHistory.push(obj.offerId));
+        }
         const cat = await CategoryJob.findAll({
             attributes: ["id"],
         });
@@ -452,6 +462,9 @@ router.post("/OfferFiltred", passport, async (req, res) => {
         }
         const offer = await Offer.findAll({
             where: {
+                id: {
+                    [Op.notIn]: offerInHistory,
+                },
                 cityId: cityId,
                 typeOfferId: typeOfferId,
                 categoryJobId: categoryId,

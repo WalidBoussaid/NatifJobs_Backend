@@ -12,7 +12,7 @@ router.get("/allMatchEmployer", passport, async (req, res) => {
             where: {
                 employerId: userId,
             },
-            order: [["createdAt", "DESC"]],
+            order: [["updatedAt", "DESC"]],
             include: [
                 {
                     model: Employer,

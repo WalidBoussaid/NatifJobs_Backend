@@ -52,6 +52,55 @@ router.post("/createMessage", passport, async (req, res) => {
         await message.setEmployer(emp);
         await message.setMatch(match);
 
+        match.set({
+            employerId: 0,
+        });
+        match.save();
+        match.set({
+            employerId: userId,
+        });
+        match.save();
+
+        return res.json(message);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+//route qui cree un msg coté candidate
+router.post("/createMessageCand", passport, async (req, res) => {
+    const matchId = req.body.matchId;
+    const userId = req.user.userId;
+    const msg = req.body.msg;
+
+    try {
+        const message = await Message.create({
+            msg: msg,
+        });
+
+        const cand = await Candidate.findOne({
+            where: {
+                id: userId,
+            },
+        });
+
+        const match = await Match.findOne({
+            where: {
+                id: matchId,
+            },
+        });
+
+        await message.setEmployer(cand);
+        await message.setMatch(match);
+
+        match.set({
+            candidateId: 0,
+        });
+        match.save();
+        match.set({
+            candidateId: userId,
+        });
+        match.save();
+
         return res.json(message);
     } catch (error) {
         return res.status(404).json(error.message);
