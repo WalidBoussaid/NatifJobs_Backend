@@ -316,8 +316,10 @@ router.delete("/deleteOffer/:id", passport, async (req, res) => {
         const match = await Match.findAll({
             where: { offerId: offerId },
         });
+
         let id = [];
         match.forEach((obj) => id.push(obj.id));
+
         const msg = await Message.findAll({
             where: { matchId: id },
         });

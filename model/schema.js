@@ -12,6 +12,7 @@ const HistoryCandidate = require("./historyCandidate");
 const HistoryEmployer = require("./historyEmployer");
 const Match = require("./match");
 const Message = require("./message");
+const Rdv = require("./rdv");
 
 //models associations
 Employer.hasMany(Match);
@@ -20,6 +21,13 @@ Candidate.hasMany(Match);
 Match.belongsTo(Offer);
 Match.belongsTo(Employer);
 Match.belongsTo(Candidate);
+
+Employer.hasMany(Rdv);
+Offer.hasMany(Rdv);
+Candidate.hasMany(Rdv);
+Rdv.belongsTo(Offer);
+Rdv.belongsTo(Employer);
+Rdv.belongsTo(Candidate);
 
 Employer.hasMany(Message);
 Match.hasMany(Message);
@@ -104,4 +112,5 @@ module.exports = {
     NotificationEmployer,
     Match,
     Message,
+    Rdv,
 };
