@@ -67,6 +67,30 @@ router.get("/allRdv", passport, async (req, res) => {
     }
 });
 
+//route qui recupere tous les rdv coter candidate
+router.get("/allRdvCand", passport, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        const rdv = await Rdv.findAll({
+            where: {
+                candidateId: userId,
+            },
+            include: [
+                {
+                    model: Employer,
+                },
+                {
+                    model: Offer,
+                },
+            ],
+        });
+        return res.json(rdv);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
 router.delete("/deleteRdv", passport, async (req, res) => {
     try {
         const rdvId = req.body.rdvId;
