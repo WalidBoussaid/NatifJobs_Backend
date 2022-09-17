@@ -43,6 +43,7 @@ router.post("/addRdv", passport, async (req, res) => {
     }
 });
 
+//route qui recupere tous les rdv coter employer
 router.get("/allRdv", passport, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -61,6 +62,30 @@ router.get("/allRdv", passport, async (req, res) => {
             ],
         });
         return res.json(rdv);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
+router.delete("/deleteRdv", passport, async (req, res) => {
+    try {
+        const rdvId = req.body.rdvId;
+        const userId = req.user.userId;
+
+        const rdv = await Rdv.findOne({
+            where: {
+                id: rdvId,
+                employerId: userId,
+            },
+        });
+
+        if (rdv) {
+            await rdv.destroy();
+        } else {
+            return res.status(404).json({ err: "Le rdv n'existe pas !" });
+        }
+
+        return res.json(true);
     } catch (error) {
         return res.status(404).json(error.message);
     }
