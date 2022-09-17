@@ -15,4 +15,17 @@ router.get("/allCategory", passport, async (req, res) => {
     }
 });
 
+//route qui cree une categorie coté admin
+router.post("/addCategory", passport, async (req, res) => {
+    try {
+        const categoryName = req.body.categoryName;
+        const category = City.create({
+            name: categoryName,
+        });
+        return res.json(category);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
 module.exports = router;
