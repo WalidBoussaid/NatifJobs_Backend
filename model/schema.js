@@ -14,6 +14,7 @@ const Match = require("./match");
 const Message = require("./message");
 const Rdv = require("./rdv");
 const Admin = require("./admin");
+const Rgpd = require("./rgpd");
 
 //models associations
 Employer.hasMany(Match);
@@ -119,4 +120,5 @@ module.exports = {
     Message,
     Rdv,
     Admin,
+    Rgpd,
 };
