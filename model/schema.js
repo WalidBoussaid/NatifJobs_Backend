@@ -39,9 +39,11 @@ Message.belongsTo(Candidate);
 
 Role.hasMany(Candidate);
 Role.hasMany(Employer);
+Role.hasMany(Admin);
 
 Candidate.belongsTo(Role);
 Employer.belongsTo(Role);
+Admin.belongsTo(Role);
 
 Offer.belongsTo(Employer);
 Employer.hasMany(Offer);

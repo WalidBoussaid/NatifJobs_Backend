@@ -25,7 +25,7 @@ const {
     const candidate = await Role.create({
         roleName: "candidate",
     });
-    const admi = await Role.create({
+    const administrator = await Role.create({
         roleName: "admin",
     });
 
@@ -162,7 +162,7 @@ const {
     //add role to Candidate/Employer
     await yves.setRole(candidate);
     await emp1.setRole(employer);
-    await admin.setRole(admi);
+    await admin.setRole(administrator);
 
     //add login to Candidate/Employer
     await yves.setLogin(log1);
