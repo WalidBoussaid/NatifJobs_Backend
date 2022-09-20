@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const { Login, Candidate, Employer } = require("../model/schema");
+const { Login, Candidate, Employer, Admin } = require("../model/schema");
 const router = express.Router();
 const { generetaTokenJWT } = require("../auth/jwtAuth");
 const passport = require("../auth/passport");
@@ -22,6 +22,9 @@ router.post("/", async (req, res) => {
                 {
                     model: Employer,
                 },
+                {
+                    model: Admin,
+                },
             ],
         });
 
@@ -35,9 +38,12 @@ router.post("/", async (req, res) => {
             if (login.candidate) {
                 const token = generetaTokenJWT(login.id, login.candidate.id);
                 return res.json({ token: token, role: "candidate" });
-            } else {
+            } else if (login.employer) {
                 const token = generetaTokenJWT(login.id, login.employer.id);
                 return res.json({ token: token, role: "employer" });
+            } else {
+                const token = generetaTokenJWT(login.id, login.admin.id);
+                return res.json({ token: token, role: "admin" });
             }
         } else {
             return res
