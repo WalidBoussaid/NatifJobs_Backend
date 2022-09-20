@@ -11,6 +11,7 @@ const {
     Login,
     TypeOffer,
     City,
+    Admin,
 } = require("./schema");
 
 (async () => {
@@ -23,6 +24,9 @@ const {
     });
     const candidate = await Role.create({
         roleName: "candidate",
+    });
+    const admi = await Role.create({
+        roleName: "admin",
     });
 
     //city
@@ -99,7 +103,7 @@ const {
 
     //Offer
     const offer1 = await Offer.create({
-        title: "Junior devloper java",
+        title: "Junior developer java",
         description:
             "En tant que Junior Java Developer, vous rejoignez une équipe dynamique organisée de façon Agile / Scrum : gestion d'un backlog, séances de poker planning, stand-up meetings quotidiens, découpe du travail en sprints de 2 à 3 semaines, réunions rétrospectives, Cette organisation permet à chaque membre de l’équipe de s’impliquer fortement dans le projet et de participer aux prises de décisions. Vous prenez part au développement de nouvelles applications en vous basant sur les standards de développement et les frameworks existants. A partir des documents d’analyses fonctionnelles rédigés par les analystes et des consignes techniques transmises par les architectes, vous assurez le développement, le testing et la documentation des applications développées. Vous êtes également responsable de la résolution de bugs liés au code et du développement de nouvelles fonctionnalités...",
     });
@@ -107,10 +111,14 @@ const {
     //Login
     const log1 = await Login.create({
         mail: "nduwayezv@cactustore.com",
-        password: "123456",
+        password: "azerty",
     });
     const log2 = await Login.create({
         mail: "totosprl@gmail.com",
+        password: "azerty",
+    });
+    const log3 = await Login.create({
+        mail: "admin@gmail.com",
         password: "azerty",
     });
 
@@ -145,13 +153,21 @@ const {
         website: "www.totosprl.com",
     });
 
+    //Admin
+    const admin = await Admin.create({
+        name: "Boussaid",
+        firstName: "Walid",
+    });
+
     //add role to Candidate/Employer
     await yves.setRole(candidate);
     await emp1.setRole(employer);
+    await admin.setRole(admi);
 
     //add login to Candidate/Employer
     await yves.setLogin(log1);
     await emp1.setLogin(log2);
+    await admin.setLogin(log3);
 
     //add city to employer/candidate
     await emp1.setCity(bruxelles);

@@ -13,6 +13,7 @@ const HistoryEmployer = require("./historyEmployer");
 const Match = require("./match");
 const Message = require("./message");
 const Rdv = require("./rdv");
+const Admin = require("./admin");
 
 //models associations
 Employer.hasMany(Match);
@@ -94,8 +95,10 @@ Offer.belongsTo(TypeOffer);
 
 Login.hasOne(Candidate);
 Login.hasOne(Employer);
+Login.hasOne(Admin);
 Employer.belongsTo(Login);
 Candidate.belongsTo(Login);
+Admin.belongsTo(Login);
 
 module.exports = {
     Candidate,
@@ -113,4 +116,5 @@ module.exports = {
     Match,
     Message,
     Rdv,
+    Admin,
 };

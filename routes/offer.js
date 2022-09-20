@@ -468,6 +468,7 @@ router.get("/OfferSelected/:id", passport, async (req, res) => {
 //route qui renvoi la liste des offres les avoir filtrer
 router.post("/OfferFiltred", passport, async (req, res) => {
     let categoryId = req.body.categoryId;
+    const userId = req.user.userId;
     let typeOfferId = req.body.typeOfferId;
     let cityId = req.body.cityId;
     let cattemp = [];
