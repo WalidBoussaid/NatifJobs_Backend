@@ -26,6 +26,7 @@ const historyEmployerRouter = require("./routes/historyEmployer");
 const matchRouter = require("./routes/match");
 const messageRouter = require("./routes/message");
 const rdvRoutter = require("./routes/rdv");
+const rgpdRoutter = require("./routes/rgpd");
 
 const app = express();
 
@@ -55,5 +56,6 @@ app.use("/historyEmployer", historyEmployerRouter);
 app.use("/match", matchRouter);
 app.use("/message", messageRouter);
 app.use("/rdv", rdvRoutter);
+app.use("/rgpd", rgpdRoutter);
 
 module.exports = app;
