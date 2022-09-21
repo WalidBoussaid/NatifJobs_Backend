@@ -6,6 +6,24 @@ const Login = require("../model/login");
 const router = express.Router();
 
 //route qui retourne un candidat coté candidate
+router.get("/AllCandidate", passport, async (req, res) => {
+    try {
+        const cand = await Candidate.findAll({
+            include: [
+                {
+                    model: City,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+            ],
+        });
+        return res.json(cand);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+//route qui retourne un candidat coté candidate
 router.get("/oneCandidate/:id", passport, async (req, res) => {
     const userId = req.user.userId; //recupère l'id du candidat connecté
     try {
