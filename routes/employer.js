@@ -2,6 +2,14 @@ const express = require("express");
 const City = require("../model/city");
 const Login = require("../model/login");
 const Employer = require("../model/employer");
+const HistoryCandidate = require("../model/historyCandidate");
+const HistoryEmployer = require("../model/historyEmployer");
+const Message = require("../model/message");
+const Match = require("../model/match");
+const NotifCandidate = require("../model/notificationCandidate");
+const NotifEmployer = require("../model/notificationEmployer");
+const Offer = require("../model/offer");
+const Rdv = require("../model/rdv");
 const router = express.Router();
 const passport = require("../auth/passport");
 
@@ -22,6 +30,38 @@ router.get("/oneEmployer/:id", passport, async (req, res) => {
                 },
             ],
         });
+        return res.json(emp);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
+//route qui retourne un employeur coté admin
+router.post("/findEmployer/:id", passport, async (req, res) => {
+    const empId = req.body.empId;
+    try {
+        const emp = await Employer.findOne({
+            where: {
+                id: empId,
+            },
+            include: [
+                {
+                    model: City,
+                    attributes: {
+                        exclude: ["updatedAt", "createdAt"],
+                    },
+                },
+            ],
+        });
+        return res.json(emp);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
+router.get("/AllEmployer", passport, async (req, res) => {
+    try {
+        const emp = await Employer.findAll();
         return res.json(emp);
     } catch (error) {
         return res.status(404).json(error.message);
@@ -138,6 +178,108 @@ router.post("/employerUpdate/:id", passport, async (req, res) => {
         await emp.setLogin(login);
         await emp.setCity(city);
         return res.json(emp);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
+//route qui supprime un employeur coté admin
+router.delete("/deleteEmployer", passport, async (req, res) => {
+    const empId = req.body.empId;
+    const loginId = req.body.loginId;
+    try {
+        const emp = await Employer.findOne({
+            where: {
+                id: empId,
+            },
+        });
+        const offer = await Offer.findAll({
+            where: {
+                employerId: empId,
+            },
+        });
+
+        let offerId = [];
+        offer.forEach((obj) => offerId.push(obj.id));
+
+        const match = await Match.findAll({
+            where: {
+                employerId: empId,
+            },
+        });
+
+        let id = [];
+        match.forEach((obj) => id.push(obj.id));
+
+        const msg = await Message.findAll({
+            where: {
+                matchId: id,
+            },
+        });
+        const notifcand = await NotifCandidate.findAll({
+            where: {
+                employerId: empId,
+            },
+        });
+        const notifEmp = await NotifEmployer.findAll({
+            where: {
+                employerId: empId,
+            },
+        });
+        const rdv = await Rdv.findAll({
+            where: {
+                employerId: empId,
+            },
+        });
+        const histCand = await HistoryCandidate.findAll({
+            where: {
+                offerId: offerId,
+            },
+        });
+        const histEmp = await HistoryEmployer.findAll({
+            where: {
+                employerId: empId,
+            },
+        });
+        const log = await Login.findOne({
+            where: {
+                id: loginId,
+            },
+        });
+
+        if (emp) {
+            for (let i = 0; i < msg.length; i++) {
+                await msg[i].destroy();
+            }
+            for (let i = 0; i < match.length; i++) {
+                await match[i].destroy();
+            }
+            for (let i = 0; i < histCand.length; i++) {
+                await histCand[i].destroy();
+            }
+            for (let i = 0; i < histEmp.length; i++) {
+                await histEmp[i].destroy();
+            }
+            for (let i = 0; i < notifcand.length; i++) {
+                await notifcand[i].destroy();
+            }
+            for (let i = 0; i < notifEmp.length; i++) {
+                await notifEmp[i].destroy();
+            }
+            for (let i = 0; i < rdv.length; i++) {
+                await rdv[i].destroy();
+            }
+            for (let i = 0; i < offer.length; i++) {
+                await offer[i].destroy();
+            }
+            await log.destroy();
+
+            await emp.destroy();
+        } else {
+            return res.status(404).json({ err: "L'employeur n'existe pas !" });
+        }
+
+        return res.json(true);
     } catch (error) {
         return res.status(404).json(error.message);
     }
