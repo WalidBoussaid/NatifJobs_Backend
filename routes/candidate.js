@@ -3,6 +3,14 @@ const passport = require("../auth/passport");
 const Candidate = require("../model/candidate");
 const City = require("../model/city");
 const Login = require("../model/login");
+const HistoryCandidate = require("../model/historyCandidate");
+const HistoryEmployer = require("../model/historyEmployer");
+const Message = require("../model/message");
+const Match = require("../model/match");
+const NotifCandidate = require("../model/notificationCandidate");
+const NotifEmployer = require("../model/notificationEmployer");
+const Rdv = require("../model/rdv");
+
 const router = express.Router();
 
 //route qui retourne un candidat coté candidate
@@ -214,6 +222,94 @@ router.post("/updateCandidate/:id", passport, async (req, res) => {
         await cand.setCity(city);
 
         return res.json(cand);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
+//route qui supprime un candidat coté admin
+router.delete("/deleteCandidate", passport, async (req, res) => {
+    const candId = req.body.candId;
+    const loginId = req.body.loginId;
+    try {
+        const cand = await Candidate.findOne({
+            where: {
+                id: candId,
+            },
+        });
+        const match = await Match.findAll({
+            where: {
+                candidateId: candId,
+            },
+        });
+        let id = [];
+        match.forEach((obj) => id.push(obj.id));
+        const msg = await Message.findAll({
+            where: {
+                matchId: id,
+            },
+        });
+        const notifcand = await NotifCandidate.findAll({
+            where: {
+                candidateId: candId,
+            },
+        });
+        const notifEmp = await NotifEmployer.findAll({
+            where: {
+                candidateId: candId,
+            },
+        });
+        const rdv = await Rdv.findAll({
+            where: {
+                candidateId: candId,
+            },
+        });
+        const histCand = await HistoryCandidate.findAll({
+            where: {
+                candidateId: candId,
+            },
+        });
+        const histEmp = await HistoryEmployer.findAll({
+            where: {
+                candidateId: candId,
+            },
+        });
+        const log = await Login.findOne({
+            where: {
+                id: loginId,
+            },
+        });
+
+        if (cand) {
+            for (let i = 0; i < msg.length; i++) {
+                await msg[i].destroy();
+            }
+            for (let i = 0; i < match.length; i++) {
+                await match[i].destroy();
+            }
+            for (let i = 0; i < histCand.length; i++) {
+                await histCand[i].destroy();
+            }
+            for (let i = 0; i < histEmp.length; i++) {
+                await histEmp[i].destroy();
+            }
+            for (let i = 0; i < notifcand.length; i++) {
+                await notifcand[i].destroy();
+            }
+            for (let i = 0; i < notifEmp.length; i++) {
+                await notifEmp[i].destroy();
+            }
+            for (let i = 0; i < rdv.length; i++) {
+                await rdv[i].destroy();
+            }
+            await log.destroy();
+
+            await cand.destroy();
+        } else {
+            return res.status(404).json({ err: "Le candidat n'existe pas !" });
+        }
+
+        return res.json(true);
     } catch (error) {
         return res.status(404).json(error.message);
     }
