@@ -27,6 +27,7 @@ const matchRouter = require("./routes/match");
 const messageRouter = require("./routes/message");
 const rdvRoutter = require("./routes/rdv");
 const rgpdRoutter = require("./routes/rgpd");
+const adminRoutter = require("./routes/admin");
 
 const app = express();
 
@@ -57,5 +58,6 @@ app.use("/match", matchRouter);
 app.use("/message", messageRouter);
 app.use("/rdv", rdvRoutter);
 app.use("/rgpd", rgpdRoutter);
+app.use("/admin", adminRoutter);
 
 module.exports = app;
