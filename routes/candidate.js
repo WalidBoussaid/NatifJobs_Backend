@@ -10,6 +10,7 @@ const Match = require("../model/match");
 const NotifCandidate = require("../model/notificationCandidate");
 const NotifEmployer = require("../model/notificationEmployer");
 const Rdv = require("../model/rdv");
+const { passwordHash, compareHash } = require("../bcrypt");
 
 const router = express.Router();
 
@@ -83,6 +84,7 @@ router.post("/updateCandidate/:id", passport, async (req, res) => {
     try {
         const mail = req.body.mail;
         const password = req.body.password;
+        const newPassword = req.body.newPassword;
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         const email = req.body.mail;
@@ -96,6 +98,8 @@ router.post("/updateCandidate/:id", passport, async (req, res) => {
         const hobbies = req.body.hobbies;
         const cv = req.body.cv;
         const cityId = req.body.cityId;
+
+        let isNewPassword = true;
 
         const login = await Login.findOne({
             where: {
@@ -115,6 +119,8 @@ router.post("/updateCandidate/:id", passport, async (req, res) => {
             },
         });
 
+        const checkPassword = await compareHash(password, login.password);
+
         if (login == null || login == "") {
             return res.status(404).json({ err: "Le mail existe pas !" });
         }
@@ -129,9 +135,17 @@ router.post("/updateCandidate/:id", passport, async (req, res) => {
                 .status(404)
                 .json({ err: "Veuillez entrer un email valide" });
         }
-        if (password.length < 6) {
+        if (checkPassword == false) {
             return res.status(404).json({
-                err: "Veuillez entrer un mot de passe à min 6 caractères",
+                err: "Mot de passe incorrect",
+            });
+        }
+        if (newPassword == null || newPassword == "") {
+            isNewPassword = false;
+        }
+        if (isNewPassword == true && newPassword.length < 6) {
+            return res.status(404).json({
+                err: "Veuillez entrer un nouveau mot de passe à 6 caracères !",
             });
         }
         if (firstName.length < 2 || !/^[aA-zZ]+$/.test(firstName)) {
@@ -194,32 +208,62 @@ router.post("/updateCandidate/:id", passport, async (req, res) => {
             });
         }
 
-        login.set({
-            mail: mail,
-            password: password,
-        });
+        if (checkPassword == true && isNewPassword == false) {
+            login.set({
+                mail: mail,
+                password: await passwordHash(password),
+            });
 
-        await login.save();
+            await login.save();
 
-        cand.set({
-            firstName: firstName,
-            lastName: lastName,
-            email: mail,
-            profilImg: profilImg,
-            nationality: nationality,
-            adress: adress,
-            postalCode: postalCode,
-            dateOfBirth: dateOfBirth,
-            lastDiplomaObtained: lastDiplomaObtained,
-            lastExperiencepro: lastExperiencepro,
-            hobbies: hobbies,
-            cv: cv,
-        });
+            cand.set({
+                firstName: firstName,
+                lastName: lastName,
+                email: mail,
+                profilImg: profilImg,
+                nationality: nationality,
+                adress: adress,
+                postalCode: postalCode,
+                dateOfBirth: dateOfBirth,
+                lastDiplomaObtained: lastDiplomaObtained,
+                lastExperiencepro: lastExperiencepro,
+                hobbies: hobbies,
+                cv: cv,
+            });
 
-        await cand.save();
+            await cand.save();
 
-        await cand.setLogin(login);
-        await cand.setCity(city);
+            await cand.setLogin(login);
+            await cand.setCity(city);
+        }
+        if (checkPassword == true && isNewPassword == true) {
+            login.set({
+                mail: mail,
+                password: await passwordHash(newPassword),
+            });
+
+            await login.save();
+
+            cand.set({
+                firstName: firstName,
+                lastName: lastName,
+                email: mail,
+                profilImg: profilImg,
+                nationality: nationality,
+                adress: adress,
+                postalCode: postalCode,
+                dateOfBirth: dateOfBirth,
+                lastDiplomaObtained: lastDiplomaObtained,
+                lastExperiencepro: lastExperiencepro,
+                hobbies: hobbies,
+                cv: cv,
+            });
+
+            await cand.save();
+
+            await cand.setLogin(login);
+            await cand.setCity(city);
+        }
 
         return res.json(cand);
     } catch (error) {

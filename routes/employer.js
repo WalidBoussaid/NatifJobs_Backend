@@ -12,6 +12,7 @@ const Offer = require("../model/offer");
 const Rdv = require("../model/rdv");
 const router = express.Router();
 const passport = require("../auth/passport");
+const { passwordHash, compareHash } = require("../bcrypt");
 
 //route qui retourne un employer coté employer
 router.get("/oneEmployer/:id", passport, async (req, res) => {
@@ -73,6 +74,7 @@ router.post("/employerUpdate/:id", passport, async (req, res) => {
     try {
         const mail = req.body.mail;
         const password = req.body.password;
+        const newPassword = req.body.newPassword;
         const name = req.body.name;
         const email = req.body.mail;
         const cityId = req.body.cityId;
@@ -81,6 +83,8 @@ router.post("/employerUpdate/:id", passport, async (req, res) => {
         const phone = req.body.phone;
         const profilImg = req.body.profilImg;
         const website = req.body.website;
+
+        let isNewPassword = true;
 
         const login = await Login.findOne({
             where: {
@@ -100,6 +104,8 @@ router.post("/employerUpdate/:id", passport, async (req, res) => {
             },
         });
 
+        const checkPassword = await compareHash(password, login.password);
+
         if (login == null || login == "") {
             return res.status(404).json({ err: "Le mail existe pas !" });
         }
@@ -114,9 +120,17 @@ router.post("/employerUpdate/:id", passport, async (req, res) => {
                 .status(404)
                 .json({ err: "Veuillez entrer un email valide" });
         }
-        if (password.length < 6) {
+        if (checkPassword == false) {
             return res.status(404).json({
-                err: "Veuillez entrer un mot de passe à min 6 caractères",
+                err: "Mot de passe incorrect",
+            });
+        }
+        if (newPassword == null || newPassword == "") {
+            isNewPassword = false;
+        }
+        if (isNewPassword == true && newPassword.length < 6) {
+            return res.status(404).json({
+                err: "Veuillez entrer un nouveau mot de passe à 6 caracères !",
             });
         }
         if (name.length < 2) {
@@ -156,27 +170,54 @@ router.post("/employerUpdate/:id", passport, async (req, res) => {
             });
         }
 
-        login.set({
-            mail: mail,
-            password: password,
-        });
+        if (checkPassword == true && isNewPassword == false) {
+            login.set({
+                mail: mail,
+                password: await passwordHash(password),
+            });
 
-        await login.save();
+            await login.save();
 
-        emp.set({
-            name: name,
-            email: email,
-            adress: adress,
-            postalCode: postalCode,
-            phone: phone,
-            profilImg: profilImg,
-            website: website,
-        });
+            emp.set({
+                name: name,
+                email: email,
+                adress: adress,
+                postalCode: postalCode,
+                phone: phone,
+                profilImg: profilImg,
+                website: website,
+            });
 
-        await emp.save();
+            await emp.save();
 
-        await emp.setLogin(login);
-        await emp.setCity(city);
+            await emp.setLogin(login);
+            await emp.setCity(city);
+        }
+
+        if (checkPassword == true && isNewPassword == true) {
+            login.set({
+                mail: mail,
+                password: await passwordHash(newPassword),
+            });
+
+            await login.save();
+
+            emp.set({
+                name: name,
+                email: email,
+                adress: adress,
+                postalCode: postalCode,
+                phone: phone,
+                profilImg: profilImg,
+                website: website,
+            });
+
+            await emp.save();
+
+            await emp.setLogin(login);
+            await emp.setCity(city);
+        }
+
         return res.json(emp);
     } catch (error) {
         return res.status(404).json(error.message);

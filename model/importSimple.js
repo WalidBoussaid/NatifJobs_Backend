@@ -1,6 +1,8 @@
 //import connection with database
 const sequelize = require("./connection");
 
+const { passwordHash } = require("../bcrypt");
+
 //import models
 const {
     Candidate,
@@ -112,15 +114,15 @@ const {
     //Login
     const log1 = await Login.create({
         mail: "nduwayezv@cactustore.com",
-        password: "azerty",
+        password: await passwordHash("azerty"),
     });
     const log2 = await Login.create({
         mail: "totosprl@gmail.com",
-        password: "azerty",
+        password: await passwordHash("azerty"),
     });
     const log3 = await Login.create({
         mail: "admin@gmail.com",
-        password: "azerty",
+        password: await passwordHash("azerty"),
     });
 
     //Candidate

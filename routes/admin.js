@@ -2,6 +2,7 @@ const express = require("express");
 const { Admin, Login } = require("../model/schema");
 const router = express.Router();
 const passport = require("../auth/passport");
+const { passwordHash, compareHash } = require("../bcrypt");
 
 router.get("/", passport, async (req, res) => {
     try {
@@ -30,8 +31,11 @@ router.post("/updateAdmin", passport, async (req, res) => {
 
         const mail = req.body.mail;
         const password = req.body.password;
+        const newPassword = req.body.newPassword;
         const firstName = req.body.firstName;
         const name = req.body.name;
+
+        let isNewPassword = true;
 
         const admin = await Admin.findOne({
             where: {
@@ -49,6 +53,8 @@ router.post("/updateAdmin", passport, async (req, res) => {
             },
         });
 
+        const checkPassword = await compareHash(password, login.password);
+
         if (login == null || login == "") {
             return res.status(404).json({ err: "Le mail existe pas !" });
         }
@@ -60,11 +66,21 @@ router.post("/updateAdmin", passport, async (req, res) => {
                 .status(404)
                 .json({ err: "Veuillez entrer un email valide" });
         }
-        if (password.length < 6) {
+        if (checkPassword == false) {
             return res.status(404).json({
-                err: "Veuillez entrer un mot de passe à min 6 caractères",
+                err: "Mot de passe incorrect",
             });
         }
+
+        if (newPassword == null || newPassword == "") {
+            isNewPassword = false;
+        }
+        if (isNewPassword == true && newPassword.length < 6) {
+            return res.status(404).json({
+                err: "Veuillez entrer un mot de passe à 6 caracères !",
+            });
+        }
+
         if (firstName.length < 2 || !/^[aA-zZ]+$/.test(firstName)) {
             return res.status(404).json({
                 err: "Veuillez entrer un prenom avec min 2 caractères",
@@ -76,23 +92,43 @@ router.post("/updateAdmin", passport, async (req, res) => {
             });
         }
 
-        login.set({
-            mail: mail,
-            password: password,
-        });
+        if (checkPassword == true && isNewPassword == false) {
+            login.set({
+                mail: mail,
+                password: await passwordHash(password),
+            });
 
-        await login.save();
+            await login.save();
 
-        admin.set({
-            name: name,
-            firstName: firstName,
-        });
+            admin.set({
+                name: name,
+                firstName: firstName,
+            });
 
-        await admin.save();
+            await admin.save();
 
-        await admin.setLogin(login);
+            await admin.setLogin(login);
+        }
 
-        return res.json(admin);
+        if (checkPassword == true && isNewPassword == true) {
+            login.set({
+                mail: mail,
+                password: await passwordHash(newPassword),
+            });
+
+            await login.save();
+
+            admin.set({
+                name: name,
+                firstName: firstName,
+            });
+
+            await admin.save();
+
+            await admin.setLogin(login);
+        }
+
+        return res.json(true);
     } catch (error) {
         return res.status(404).json(error.message);
     }

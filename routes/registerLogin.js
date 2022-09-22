@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { Login, Employer, Role, Candidate, City } = require("../model/schema");
 const { generetaTokenJWT } = require("../auth/jwtAuth");
+const { passwordHash } = require("../bcrypt");
 
 router.post("/employer", async (req, res) => {
     try {
@@ -75,7 +76,7 @@ router.post("/employer", async (req, res) => {
 
         const createLogin = await Login.create({
             mail: mail,
-            password: password,
+            password: await passwordHash(password),
         });
 
         const emp = await Employer.create({
@@ -218,7 +219,7 @@ router.post("/candidate", async (req, res) => {
 
         const createLogin = await Login.create({
             mail: mail,
-            password: password,
+            password: await passwordHash(password),
         });
 
         const cand = await Candidate.create({

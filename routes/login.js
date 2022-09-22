@@ -4,6 +4,7 @@ const { Login, Candidate, Employer, Admin } = require("../model/schema");
 const router = express.Router();
 const { generetaTokenJWT } = require("../auth/jwtAuth");
 const passport = require("../auth/passport");
+const { compareHash } = require("../bcrypt");
 
 /* POST login listing. */
 router.post("/", async (req, res) => {
@@ -33,8 +34,10 @@ router.post("/", async (req, res) => {
             return res.status(404).json({ err: "Le mail n'existe pas !" });
         }
 
+        const checkPassword = await compareHash(password, login.password);
+
         //verifier le password est correct
-        if (login.password === password) {
+        if (checkPassword == true) {
             if (login.candidate) {
                 const token = generetaTokenJWT(login.id, login.candidate.id);
                 return res.json({ token: token, role: "candidate" });
