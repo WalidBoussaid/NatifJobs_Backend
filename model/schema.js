@@ -73,6 +73,9 @@ NotificationEmployer.belongsTo(Employer);
 Offer.hasMany(NotificationEmployer);
 NotificationEmployer.belongsTo(Offer);
 
+Match.hasMany(NotificationEmployer);
+NotificationEmployer.belongsTo(Match);
+
 Candidate.hasMany(NotificationEmployer);
 NotificationEmployer.belongsTo(Candidate);
 

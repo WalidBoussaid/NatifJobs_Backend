@@ -1,6 +1,14 @@
 const express = require("express");
 const passport = require("../auth/passport");
-const { Message, Employer, Candidate, Match } = require("../model/schema");
+const {
+    Message,
+    Employer,
+    Candidate,
+    Match,
+    NotificationEmployer,
+    Offer,
+    NotificationCandidate,
+} = require("../model/schema");
 const router = express.Router();
 
 //route qui recupere les msg
@@ -49,6 +57,27 @@ router.post("/createMessage", passport, async (req, res) => {
             },
         });
 
+        const offer = await Offer.findOne({
+            where: {
+                id: match.offerId,
+            },
+        });
+
+        const cand = await Candidate.findOne({
+            where: {
+                id: match.candidateId,
+            },
+        });
+
+        const newNotif = await NotificationCandidate.create({
+            msg: "Vous avez reçu un nouveau message de " + emp.name,
+            visited: false,
+        });
+
+        await newNotif.setCandidate(cand);
+        await newNotif.setOffer(offer);
+        await newNotif.setEmployer(emp);
+
         await message.setEmployer(emp);
         await message.setMatch(match);
 
@@ -88,6 +117,28 @@ router.post("/createMessageCand", passport, async (req, res) => {
                 id: matchId,
             },
         });
+
+        const emp = await Employer.findOne({
+            where: {
+                id: match.employerId,
+            },
+        });
+
+        const offer = await Offer.findOne({
+            where: {
+                id: match.offerId,
+            },
+        });
+
+        const newNotif = await NotificationEmployer.create({
+            msg: "Vous avez reçu un nouveau message de " + cand.firstName,
+            visited: false,
+        });
+
+        await newNotif.setCandidate(cand);
+        await newNotif.setOffer(offer);
+        await newNotif.setEmployer(emp);
+        await newNotif.setMatch(match);
 
         await message.setCandidate(cand);
         await message.setMatch(match);

@@ -46,4 +46,20 @@ router.post("/updateNotif", passport, async (req, res) => {
     }
 });
 
+router.get("/allNewNotif", passport, async (req, res) => {
+    const userId = req.user.userId;
+    try {
+        const newNotif = await NotificationEmployer.findAll({
+            where: {
+                employerId: userId,
+                visited: false,
+            },
+        });
+
+        return res.json(newNotif);
+    } catch (error) {
+        return res.status(404).json(error.message);
+    }
+});
+
 module.exports = router;
