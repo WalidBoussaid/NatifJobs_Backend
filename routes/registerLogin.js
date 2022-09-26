@@ -9,6 +9,7 @@ router.post("/employer", async (req, res) => {
     try {
         const mail = req.body.mail;
         const password = req.body.password;
+        const confirmPwd = req.body.confirmPwd;
         const name = req.body.name;
         const email = req.body.mail;
         const cityId = req.body.cityId;
@@ -37,6 +38,11 @@ router.post("/employer", async (req, res) => {
                 err: "Veuillez entrer un mot de passe à min 6 caractères",
             });
         }
+        if (confirmPwd !== password) {
+            return res.status(404).json({
+                err: "Veillez confirmer le mot de passe identique",
+            });
+        }
         if (name.length < 2) {
             return res.status(404).json({
                 err: "Veuillez entrer un nom avec min 2 caractères",
@@ -60,7 +66,7 @@ router.post("/employer", async (req, res) => {
         }
         if (profilImg.length < 5) {
             return res.status(404).json({
-                err: "Veuillez entrer une adresse avec min 5 caractères",
+                err: "Veuillez entrer une photo avec min 5 caractères",
             });
         }
         if (
@@ -114,6 +120,7 @@ router.post("/employer", async (req, res) => {
         await emp.setLogin(createLogin);
         await emp.setRole(role);
         await emp.setCity(city);
+
         res.json(emp);
     } catch (error) {
         return res.status(404).json(error.message);
@@ -124,6 +131,7 @@ router.post("/candidate", async (req, res) => {
     try {
         const mail = req.body.mail;
         const password = req.body.password;
+        const confirmPwd = req.body.confirmPwd;
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         const email = req.body.mail;
@@ -155,6 +163,11 @@ router.post("/candidate", async (req, res) => {
         if (password.length < 6) {
             return res.status(404).json({
                 err: "Veuillez entrer un mot de passe à min 6 caractères",
+            });
+        }
+        if (confirmPwd !== password) {
+            return res.status(404).json({
+                err: "Veillez confirmer le mot de passe identique",
             });
         }
         if (firstName.length < 2 || !/^[aA-zZ]+$/.test(firstName)) {
