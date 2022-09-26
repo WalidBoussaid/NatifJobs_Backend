@@ -112,7 +112,7 @@ router.post("/ressetPassword", async (req, res) => {
 
         let mailDetails = {
             from: "natifjobs@gmail.com",
-            to: "walidmeknessi@gmail.com",
+            to: mail,
             subject: "Rénitialisation mot de passe",
             text: "Voici votre nouveau mot de passse: " + password,
         };
