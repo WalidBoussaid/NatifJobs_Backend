@@ -60,6 +60,24 @@ const {
     const nivelles = await City.create({
         name: "Nivelles",
     });
+    const arlon = await City.create({
+        name: "Arlon",
+    });
+    const mouscron = await City.create({
+        name: "Mouscron",
+    });
+    const spa = await City.create({
+        name: "Spa",
+    });
+    const wavre = await City.create({
+        name: "Wavre",
+    });
+    const tournai = await City.create({
+        name: "Tournai",
+    });
+    const tubize = await City.create({
+        name: "Tubize",
+    });
 
     //category Job
     const info = await CategoryJob.create({
@@ -88,6 +106,15 @@ const {
     });
     const jardin = await CategoryJob.create({
         name: "Jardinage",
+    });
+    const rh = await CategoryJob.create({
+        name: "Ressource humaines",
+    });
+    const secu = await CategoryJob.create({
+        name: "Surveillance & sécurité",
+    });
+    const form = await CategoryJob.create({
+        name: "Enseignement & formation",
     });
     const autre = await CategoryJob.create({
         name: "Autre ..",
