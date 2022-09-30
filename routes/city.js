@@ -8,7 +8,7 @@ router.get("/allCity", async (req, res) => {
     try {
         const city = await City.findAll({
             attributes: ["id", "name"],
-            order: [["createdAt", "DESC"]],
+            order: [["name", "asc"]],
         });
         return res.json(city);
     } catch (error) {

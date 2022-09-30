@@ -8,7 +8,7 @@ router.get("/allCategory", passport, async (req, res) => {
     try {
         const cat = await CategoryJob.findAll({
             attributes: ["id", "name"],
-            order: [["createdAt", "DESC"]],
+            order: [["name", "asc"]],
         });
         return res.json(cat);
     } catch (error) {
