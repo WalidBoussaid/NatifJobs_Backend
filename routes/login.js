@@ -37,8 +37,6 @@ router.post("/", async (req, res) => {
 
         const checkPassword = await compareHash(password, login.password);
 
-        console.log(password);
-
         //verifier le password est correct
         if (checkPassword == true) {
             if (login.candidate) {
